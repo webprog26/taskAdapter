@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
@@ -14,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/darker_gray"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tvAppLabel"
         android:text="Google"
         android:layout_toRightOf="@+id/ivAppIcon"
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/darker_gray"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:id="@+id/tvAppCategory"
         android:layout_toLeftOf="@+id/radioGroup"
         android:text="fun"
@@ -36,17 +37,20 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:orientation="horizontal"
         android:layout_centerVertical="true">
-        <RadioButton
+        <android.support.v7.widget.AppCompatRadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rbEducation"/>
-        <RadioButton
+            android:id="@+id/rbEducation"
+            app:buttonTint="@color/colorEducational"/>
+        <android.support.v7.widget.AppCompatRadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rbForFun"/>
-        <RadioButton
+            android:id="@+id/rbForFun"
+            app:buttonTint="@color/colorForFun"/>/>
+        <android.support.v7.widget.AppCompatRadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/rbNeutral"/>
+            android:id="@+id/rbBlocked"
+            app:buttonTint="@color/colorBlocked"/>
     </RadioGroup>
 </merge>

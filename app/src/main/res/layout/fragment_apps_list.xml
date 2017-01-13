@@ -2,19 +2,63 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:paddingBottom="@dimen/activity_vertical_margin">
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pbLoadingStatus"
         android:indeterminate="false"
         android:layout_centerInParent="true"/>
-    <com.example.webprog26.taskadapter.custom_views.AppsListItemViewGroup
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/apps_list_item_height"
-        android:id="@+id/itemView"
-        android:background="@android:color/holo_blue_dark"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"/>
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:id="@+id/appsCountLayout"
+        android:paddingLeft="10dp"
+        android:background="@android:color/darker_gray">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvTotalAppsCount"
+            android:text="44 applications"
+            android:background="@drawable/tv_total_apps_count_bg"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/apps_counters_text_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/apps_counters_horizontal_margin"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvEducationAppsCount"
+            android:text="1 educational"
+            android:background="@drawable/tv_category_apps_count_bg"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/apps_counters_text_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/apps_counters_horizontal_margin"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvNeutralAppsCount"
+            android:text="1 neutral"
+            android:background="@drawable/tv_category_apps_count_bg"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/apps_counters_text_size"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/apps_counters_horizontal_margin"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvForFunAppsCount"
+            android:text="3 for fun"
+            android:background="@drawable/tv_category_apps_count_bg"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/apps_counters_text_size"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/appsRecyclerView"
+        android:layout_below="@+id/appsCountLayout"/>
 </RelativeLayout>

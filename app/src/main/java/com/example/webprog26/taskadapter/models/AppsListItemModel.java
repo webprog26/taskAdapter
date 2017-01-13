@@ -11,6 +11,7 @@ public class AppsListItemModel {
     private long mAppId;
     private String mAppLabel;
     private Bitmap mAppIcon;
+    private String mAppCategory;
     private boolean isEducational;
     private boolean isNeutral;
     private boolean isForFun;
@@ -25,6 +26,10 @@ public class AppsListItemModel {
 
     public Bitmap getAppIcon() {
         return mAppIcon;
+    }
+
+    public String getAppCategory() {
+        return mAppCategory;
     }
 
     public boolean isEducational() {
@@ -57,6 +62,11 @@ public class AppsListItemModel {
 
         public Builder setAppIcon(Bitmap appIcon){
             AppsListItemModel.this.mAppIcon = appIcon;
+            return this;
+        }
+
+        public Builder setAppCategory(String appCategory){
+            AppsListItemModel.this.mAppCategory = appCategory;
             return this;
         }
 

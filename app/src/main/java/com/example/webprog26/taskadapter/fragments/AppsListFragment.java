@@ -6,13 +6,16 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.webprog26.taskadapter.R;
+import com.example.webprog26.taskadapter.adapters.AppsListAdapter;
 import com.example.webprog26.taskadapter.managers.DrawableToBitmapConverter;
 import com.example.webprog26.taskadapter.models.AppsListItemModel;
 
@@ -37,6 +40,7 @@ public class AppsListFragment extends Fragment {
     private static final String TAG = "AppsListFragment";
     private Subscription mAppsListSubscription;
     private ProgressBar mPbLoadingStatus;
+    private RecyclerView mAppsRecyclerView;
 
     @Nullable
     @Override
@@ -48,6 +52,11 @@ public class AppsListFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPbLoadingStatus = (ProgressBar) view.findViewById(R.id.pbLoadingStatus);
+
+        mAppsRecyclerView = (RecyclerView) view.findViewById(R.id.appsRecyclerView);
+        mAppsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAppsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mAppsRecyclerView.setHasFixedSize(true);
     }
 
     @Override
@@ -74,6 +83,7 @@ public class AppsListFragment extends Fragment {
                                     .setAppLabel(appLabel)
                                     .setAppIcon(DrawableToBitmapConverter.drawableToBitmap(resolveInfo.loadIcon(packageManager)))
                             //Todo should add reading user choice from database for boolean fields
+                                    .setAppCategory("neutral")
                                     .setIsEducational(false)
                                     .setIsNeutral(false)
                                     .setIsForFun(false);
@@ -96,9 +106,11 @@ public class AppsListFragment extends Fragment {
 
                     @Override
                     public void onNext(List<AppsListItemModel> appsListItemModels) {
-                        for(AppsListItemModel appsListItemModel: appsListItemModels){
-                            Log.i(TAG, appsListItemModel.toString());
-                        }
+//                        for(AppsListItemModel appsListItemModel: appsListItemModels){
+//                            Log.i(TAG, appsListItemModel.toString());
+//                        }
+                        AppsListAdapter adapter = new AppsListAdapter(appsListItemModels, getActivity());
+                        mAppsRecyclerView.setAdapter(adapter);
                     }
                 });
 

@@ -1,10 +1,13 @@
 package com.example.webprog26.taskadapter.custom_views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,15 +17,18 @@ import com.example.webprog26.taskadapter.R;
  * Created by webpr on 13.01.2017.
  */
 
-public class AppsListItemViewGroup extends RelativeLayout {
+public class AppsListItemViewGroup extends RelativeLayout implements RadioGroup.OnCheckedChangeListener{
+
+    private static final String TAG = "AppsListItemViewGroup";
 
     private View mRootView;
     private ImageView mIvAppIcon;
     private TextView mTvAppLabel;
     private TextView mTvAppCategory;
-    private RadioButton mRbEducation;
-    private RadioButton mRbForFun;
-    private RadioButton mRbNeutral;
+    private RadioGroup mRadioGroup;
+    private AppCompatRadioButton mRbEducation;
+    private AppCompatRadioButton mRbForFun;
+    private AppCompatRadioButton mRbBlocked;
 
     public AppsListItemViewGroup(Context context) {
         super(context);
@@ -35,14 +41,57 @@ public class AppsListItemViewGroup extends RelativeLayout {
     }
 
     private void init(Context context){
-        mRootView = inflate(context, R.layout.apps_list_item, this);
+        mRootView = inflate(context, R.layout.apps_list_item_view, this);
 
         mIvAppIcon = (ImageView) mRootView.findViewById(R.id.ivAppIcon);
         mTvAppLabel = (TextView) mRootView.findViewById(R.id.tvAppLabel);
         mTvAppCategory = (TextView) mRootView.findViewById(R.id.tvAppCategory);
 
-        mRbEducation = (RadioButton) mRootView.findViewById(R.id.rbEducation);
-        mRbForFun = (RadioButton) mRootView.findViewById(R.id.rbForFun);
-        mRbNeutral = (RadioButton) mRootView.findViewById(R.id.rbNeutral);
+        mRadioGroup = (RadioGroup) mRootView.findViewById(R.id.radioGroup);
+        mRadioGroup.setOnCheckedChangeListener(this);
+
+        mRbEducation = (AppCompatRadioButton) mRootView.findViewById(R.id.rbEducation);
+        mRbForFun = (AppCompatRadioButton) mRootView.findViewById(R.id.rbForFun);
+        mRbBlocked = (AppCompatRadioButton) mRootView.findViewById(R.id.rbBlocked);
+
+    }
+
+    public void setAppIcon(Bitmap appIcon){
+        this.mIvAppIcon.setImageBitmap(appIcon);
+    }
+
+    public void setAppCategory(String appCategory){
+        this.mTvAppCategory.setText(appCategory);
+    }
+
+    public void setAppLabel(String appLabel){
+        this.mTvAppLabel.setText(appLabel);
+    }
+
+    public void setEducationState(boolean rbEducationState){
+        this.mRbEducation.setChecked(rbEducationState);
+    }
+
+    public void setForFunState(boolean rbForFunState){
+        this.mRbForFun.setChecked(rbForFunState);
+    }
+
+    public void setNeutralState(boolean rbNeutralState){
+        this.mRbBlocked.setChecked(rbNeutralState);
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.rbEducation:
+                Log.i(TAG, mTvAppLabel.getText() + " is now educational");
+                break;
+            case R.id.rbBlocked:
+                Log.i(TAG, mTvAppLabel.getText() + " is now blocked");
+                break;
+            case R.id.rbForFun:
+                Log.i(TAG, mTvAppLabel.getText() + " is now for fun");
+                break;
+        }
     }
 }

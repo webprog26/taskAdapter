@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.example.webprog26.taskadapter.custom_views.AppsListItemViewGroup
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/apps_list_item_height"
+        android:id="@+id/appsListItemView"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"/>
+</android.support.v7.widget.CardView>

@@ -79,4 +79,9 @@ public class AppsListItemModel {
             return AppsListItemModel.this;
         }
     }
+
+    @Override
+    public String toString() {
+        return "App " + getAppLabel() + " with id " + getAppId() + " with icon " + getAppIcon().toString();
+    }
 }

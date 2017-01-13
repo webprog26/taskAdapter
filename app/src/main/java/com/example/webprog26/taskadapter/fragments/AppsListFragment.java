@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.example.webprog26.taskadapter.R;
+import com.example.webprog26.taskadapter.managers.DrawableToBitmapConverter;
+import com.example.webprog26.taskadapter.models.AppsListItemModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -59,7 +62,26 @@ public class AppsListFragment extends Fragment {
                     public List<ResolveInfo> call(PackageManager packageManager) {
                         return getLauncherActivitiesList(packageManager);
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<ResolveInfo>>() {
+                }).map(new Func1<List<ResolveInfo>, List<AppsListItemModel>>() {
+                    @Override
+                    public List<AppsListItemModel> call(List<ResolveInfo> resolveInfos) {
+                        List<AppsListItemModel> appsListItemModels = new ArrayList<AppsListItemModel>();
+                        for(ResolveInfo resolveInfo: resolveInfos){
+                            String appLabel = resolveInfo.loadLabel(packageManager).toString();
+
+                            AppsListItemModel.Builder builder = AppsListItemModel.newBuilder();
+                            builder.setAppId(appLabel.hashCode())
+                                    .setAppLabel(appLabel)
+                                    .setAppIcon(DrawableToBitmapConverter.drawableToBitmap(resolveInfo.loadIcon(packageManager)))
+                            //Todo should add reading user choice from database for boolean fields
+                                    .setIsEducational(false)
+                                    .setIsNeutral(false)
+                                    .setIsForFun(false);
+                            appsListItemModels.add(builder.build());
+                        }
+                        return appsListItemModels;
+                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<AppsListItemModel>>() {
                     @Override
                     public void onCompleted() {
                         if(mPbLoadingStatus.getVisibility() == View.VISIBLE){
@@ -73,9 +95,9 @@ public class AppsListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(List<ResolveInfo> resolveInfos) {
-                        for(ResolveInfo resolveInfo: resolveInfos){
-                            Log.i(TAG, resolveInfo.loadLabel(packageManager).toString());
+                    public void onNext(List<AppsListItemModel> appsListItemModels) {
+                        for(AppsListItemModel appsListItemModel: appsListItemModels){
+                            Log.i(TAG, appsListItemModel.toString());
                         }
                     }
                 });

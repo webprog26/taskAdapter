@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.webprog26.taskadapter.R;
 import com.example.webprog26.taskadapter.custom_views.AppsListItemViewGroup;
+import com.example.webprog26.taskadapter.managers.CheckChangedListener;
 import com.example.webprog26.taskadapter.models.AppsListItemModel;
 
 import java.lang.ref.WeakReference;
@@ -52,14 +53,16 @@ public class AppsListAdapter extends RecyclerView.Adapter<AppsListAdapter.AppsLi
             mAppsListItemViewGroup = (AppsListItemViewGroup) itemView.findViewById(R.id.appsListItemView);
         }
 
-        public void bind(final AppsListItemModel itemModel){
+        public void bind(AppsListItemModel itemModel){
             mAppsListItemViewGroup.setAppIcon(itemModel.getAppIcon());
             mAppsListItemViewGroup.setAppLabel(itemModel.getAppLabel());
             mAppsListItemViewGroup.setAppCategory(itemModel.getAppCategory());
 
             mAppsListItemViewGroup.setEducationState(itemModel.isEducational());
             mAppsListItemViewGroup.setForFunState(itemModel.isForFun());
-            mAppsListItemViewGroup.setNeutralState(itemModel.isNeutral());
+            mAppsListItemViewGroup.setNeutralState(itemModel.isBlocked());
+
+            mAppsListItemViewGroup.setRadioGroupCheckedChangeListener(new CheckChangedListener(itemModel));
         }
     }
 }

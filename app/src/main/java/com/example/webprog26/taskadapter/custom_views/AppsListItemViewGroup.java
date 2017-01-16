@@ -17,7 +17,7 @@ import com.example.webprog26.taskadapter.R;
  * Created by webpr on 13.01.2017.
  */
 
-public class AppsListItemViewGroup extends RelativeLayout implements RadioGroup.OnCheckedChangeListener{
+public class AppsListItemViewGroup extends RelativeLayout{
 
     private static final String TAG = "AppsListItemViewGroup";
 
@@ -48,7 +48,6 @@ public class AppsListItemViewGroup extends RelativeLayout implements RadioGroup.
         mTvAppCategory = (TextView) mRootView.findViewById(R.id.tvAppCategory);
 
         mRadioGroup = (RadioGroup) mRootView.findViewById(R.id.radioGroup);
-        mRadioGroup.setOnCheckedChangeListener(this);
 
         mRbEducation = (AppCompatRadioButton) mRootView.findViewById(R.id.rbEducation);
         mRbForFun = (AppCompatRadioButton) mRootView.findViewById(R.id.rbForFun);
@@ -80,18 +79,7 @@ public class AppsListItemViewGroup extends RelativeLayout implements RadioGroup.
         this.mRbBlocked.setChecked(rbNeutralState);
     }
 
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId){
-            case R.id.rbEducation:
-                Log.i(TAG, mTvAppLabel.getText() + " is now educational");
-                break;
-            case R.id.rbBlocked:
-                Log.i(TAG, mTvAppLabel.getText() + " is now blocked");
-                break;
-            case R.id.rbForFun:
-                Log.i(TAG, mTvAppLabel.getText() + " is now for fun");
-                break;
-        }
+    public void setRadioGroupCheckedChangeListener(RadioGroup.OnCheckedChangeListener listener){
+        this.mRadioGroup.setOnCheckedChangeListener(listener);
     }
 }

@@ -78,16 +78,16 @@ public class AppsListFragment extends Fragment {
                         for(ResolveInfo resolveInfo: resolveInfos){
                             String appLabel = resolveInfo.loadLabel(packageManager).toString();
 
-                            AppsListItemModel.Builder builder = AppsListItemModel.newBuilder();
-                            builder.setAppId(appLabel.hashCode())
-                                    .setAppLabel(appLabel)
-                                    .setAppIcon(DrawableToBitmapConverter.drawableToBitmap(resolveInfo.loadIcon(packageManager)))
+                            AppsListItemModel model = new AppsListItemModel();
+                            model.setAppId(appLabel.hashCode());
+                            model.setAppLabel(appLabel);
+                            model.setAppIcon(DrawableToBitmapConverter.drawableToBitmap(resolveInfo.loadIcon(packageManager)));
                             //Todo should add reading user choice from database for boolean fields
-                                    .setAppCategory("neutral")
-                                    .setIsEducational(false)
-                                    .setIsNeutral(false)
-                                    .setIsForFun(false);
-                            appsListItemModels.add(builder.build());
+                            model.setAppCategory("neutral");
+                            model.setEducational(false);
+                            model.setBlocked(false);
+                            model.setForFun(false);
+                            appsListItemModels.add(model);
                         }
                         return appsListItemModels;
                     }
@@ -110,6 +110,7 @@ public class AppsListFragment extends Fragment {
 //                            Log.i(TAG, appsListItemModel.toString());
 //                        }
                         AppsListAdapter adapter = new AppsListAdapter(appsListItemModels, getActivity());
+                        mAppsRecyclerView.setItemViewCacheSize(adapter.getItemCount());
                         mAppsRecyclerView.setAdapter(adapter);
                     }
                 });

@@ -12,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity_TAG";
     private static final String APPS_LIST_FRAGMENT = "apps_list_fragment";
 
+
+
     private AppsListFragment mAppsListFragment;
 
     @Override

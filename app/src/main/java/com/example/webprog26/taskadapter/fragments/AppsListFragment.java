@@ -9,13 +9,17 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.webprog26.taskadapter.R;
 import com.example.webprog26.taskadapter.adapters.AppsListAdapter;
+import com.example.webprog26.taskadapter.db.DbProvider;
 import com.example.webprog26.taskadapter.managers.DrawableToBitmapConverter;
 import com.example.webprog26.taskadapter.models.AppsListItemModel;
 
@@ -42,6 +46,11 @@ public class AppsListFragment extends Fragment {
     private ProgressBar mPbLoadingStatus;
     private RecyclerView mAppsRecyclerView;
 
+    private DbProvider mDbProvider;
+
+    private LinearLayout mAppsCategoriesCountContainer;
+    private TextView mTvTotalAppsCount;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +60,13 @@ public class AppsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mDbProvider = new DbProvider(getActivity().getApplicationContext());
+        mTvTotalAppsCount = (TextView) view.findViewById(R.id.tvTotalAppsCount);
+        mAppsCategoriesCountContainer = (LinearLayout) view.findViewById(R.id.appsCountLayout);
+
+        Log.i(TAG, "count " + mDbProvider.getAppsInDbCount());
+
         mPbLoadingStatus = (ProgressBar) view.findViewById(R.id.pbLoadingStatus);
 
         mAppsRecyclerView = (RecyclerView) view.findViewById(R.id.appsRecyclerView);
@@ -63,6 +79,8 @@ public class AppsListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         final PackageManager packageManager = getActivity().getPackageManager();
+
+
 
         PublishSubject<PackageManager> resolveInfoPublishSubject = PublishSubject.create();
         mAppsListSubscription = resolveInfoPublishSubject
@@ -83,15 +101,32 @@ public class AppsListFragment extends Fragment {
                             model.setAppLabel(appLabel);
                             model.setAppIcon(DrawableToBitmapConverter.drawableToBitmap(resolveInfo.loadIcon(packageManager)));
                             //Todo should add reading user choice from database for boolean fields
-                            model.setAppCategory("neutral");
                             model.setEducational(false);
                             model.setBlocked(false);
                             model.setForFun(false);
+                            model.setNeutral(true);
                             appsListItemModels.add(model);
+                        }
+
+                        if(mDbProvider.getAppsInDbCount() == 0){
+                            mDbProvider.writeToDb(appsListItemModels);
                         }
                         return appsListItemModels;
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<AppsListItemModel>>() {
+                }).map(new Func1<List<AppsListItemModel>, List<AppsListItemModel>>() {
+                    @Override
+                    public List<AppsListItemModel> call(List<AppsListItemModel> appsListItemModels) {
+                        for(AppsListItemModel appsListItemModel: appsListItemModels){
+                                AppsListItemModel appsListItemModelFromDb = mDbProvider.getCategoriesValues(appsListItemModel.getAppLabel().hashCode());
+                                appsListItemModel.setEducational(appsListItemModelFromDb.isEducational());
+                                appsListItemModel.setForFun(appsListItemModelFromDb.isForFun());
+                                appsListItemModel.setBlocked(appsListItemModelFromDb.isForFun());
+                                appsListItemModel.setNeutral(appsListItemModelFromDb.isNeutral());
+                        }
+                        return appsListItemModels;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<List<AppsListItemModel>>() {
                     @Override
                     public void onCompleted() {
                         if(mPbLoadingStatus.getVisibility() == View.VISIBLE){
@@ -106,11 +141,19 @@ public class AppsListFragment extends Fragment {
 
                     @Override
                     public void onNext(List<AppsListItemModel> appsListItemModels) {
-//                        for(AppsListItemModel appsListItemModel: appsListItemModels){
-//                            Log.i(TAG, appsListItemModel.toString());
-//                        }
+                        for(AppsListItemModel appsListItemModel: appsListItemModels){
+                            Log.i(TAG, appsListItemModel.toString());
+                        }
                         AppsListAdapter adapter = new AppsListAdapter(appsListItemModels, getActivity());
-                        mAppsRecyclerView.setItemViewCacheSize(adapter.getItemCount());
+
+                        int appsCount = adapter.getItemCount();
+                        mTvTotalAppsCount.setText(appsCount + " applications");
+
+                        if(mAppsCategoriesCountContainer.getVisibility() == View.GONE){
+                            mAppsCategoriesCountContainer.setVisibility(View.VISIBLE);
+                        }
+
+                        mAppsRecyclerView.setItemViewCacheSize(appsCount);
                         mAppsRecyclerView.setAdapter(adapter);
                     }
                 });

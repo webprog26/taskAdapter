@@ -130,6 +130,6 @@ public class AppsListItemModel {
     @Override
     public String toString() {
         return "App " + getAppLabel() + " with id " + getAppId() + " with icon " + getAppIcon().toString() + "\n"
-                + "educational " + isEducational + ", for fun " + isForFun + ", blocked " + isBlocked;
+                + "educational " + isEducational + ", for fun " + isForFun + ", blocked " + isBlocked + ", neutral " + isNeutral;
     }
 }
